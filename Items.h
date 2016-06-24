@@ -11,7 +11,7 @@
 //@interface = class , Items= class name NSObject is superclass of this class
 //Onjective C has only single inheritance so every class has only one superclass
 
-@interface Items : NSObject
+@interface Items : NSObject <NSCoding>
 
 //Instance varible in the class are declared between curly braces immediately after class declaration
 

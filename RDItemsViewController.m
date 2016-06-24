@@ -99,13 +99,13 @@
     
     Items *newItem = [[RDItemStore sharedStore] createItem];
     
-    //Figure out where this item is in the array
-    NSInteger lastRow = [[[RDItemStore sharedStore] allItems] indexOfObject:newItem];
-
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:lastRow inSection:0];
+    RDDetailViewController *detailViewController = [[RDDetailViewController alloc] initForNewItem:YES];
+    detailViewController.item = newItem;
+    detailViewController.dismissBlock = ^ { [self.tableView reloadData]; };
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:detailViewController];
+    navController.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:navController animated:YES completion:NULL];
     
-    //Insert this new row into the table
-    [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationTop];
 }
 
 /*
@@ -157,7 +157,7 @@
 -(void)tableView: (UITableView *)tableView
                         didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    RDDetailViewController *detailViewController = [[RDDetailViewController alloc] init];
+    RDDetailViewController *detailViewController = [[RDDetailViewController alloc] initForNewItem:NO];
     NSArray *items = [[RDItemStore sharedStore] allItems];
     Items *selectedItem = items[indexPath.row];
     

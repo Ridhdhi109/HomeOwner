@@ -18,10 +18,11 @@
 
 +(instancetype) sharedStore {
     
-    static RDImageStore *sharedStore;
-    if(!sharedStore) {
+    static RDImageStore *sharedStore = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         sharedStore = [[self alloc] initPrivate];
-    }
+    });
     return sharedStore;
 }
 
@@ -44,20 +45,37 @@
     return self;
 }
 
--(void) setImage:(UIImage *)image forKey:(NSString *)key {
+- (void) setImage:(UIImage *)image forKey:(NSString *)key {
     self.dictionary[key] = image;
+    
+    //Create full path for image
+    NSString *imagePath = [self imagePathForKey:key];
+    
+    //Turn image into JPEG data
+    NSData *data = UIImageJPEGRepresentation(image, 0.5);
+    
+    //Write it to full path
+    [data writeToFile:imagePath atomically:YES];
 }
 
--(UIImage *) imageForKey:(NSString *)key {
+- (UIImage *) imageForKey:(NSString *)key {
     return self.dictionary[key];
 }
 
--(void) deleteImageForKey:(NSString *)key {
+- (NSString *)imagePathForKey: (NSString *)key {
+   
+    NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [documentDirectories firstObject];
+    return [documentDirectory stringByAppendingPathComponent:key];
+}
+
+- (void) deleteImageForKey:(NSString *)key {
     if(!key) {
         return;
     }
     [self.dictionary removeObjectForKey:key];
+     NSString *imagePath = [self imagePathForKey:key];
+    [[NSFileManager defaultManager] removeItemAtPath:imagePath error:nil];
 }
-
 
 @end

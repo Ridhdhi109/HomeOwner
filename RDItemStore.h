@@ -18,8 +18,9 @@
 
 //notice that this is the class metod and prefix with + instead of -
 + (instancetype) sharedStore;
--(Items *) createItem;
--(void) removeItem:(Items *) item;
--(void) moveItemIndex: (NSUInteger) fromIndex toIndex:(NSUInteger)toIndex;
+- (Items *) createItem;
+- (void) removeItem:(Items *) item;
+- (void) moveItemIndex: (NSUInteger) fromIndex toIndex:(NSUInteger)toIndex;
+- (BOOL)saveChanges;
 
 @end

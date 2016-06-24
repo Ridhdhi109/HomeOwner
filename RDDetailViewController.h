@@ -12,6 +12,9 @@
 
 @interface RDDetailViewController : UIViewController
 
+- (instancetype)initForNewItem: (BOOL)isNew;
+
 @property (nonatomic, strong) Items *item;
+@property (nonatomic, copy) void (^dismissBlock)(void);
 
 @end
